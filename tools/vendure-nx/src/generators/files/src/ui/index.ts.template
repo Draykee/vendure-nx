@@ -3,7 +3,7 @@ import path from 'path';
 
 export const uiExtensions: AdminUiExtension = {
     id: '<%= filename %>',
-    extensionPath: path.join(process.cwd(), 'libs/<%= filename %>-plugin/src/ui'),
+    extensionPath: path.join(process.cwd(), 'libs/plugin-<%= filename %>/src/ui'),
     providers: ['providers.ts'],
     routes: [{ route: '<%= filename %>', filePath: 'routes.ts' }],
 };
