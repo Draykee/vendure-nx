@@ -98,7 +98,7 @@ function getDbConnectionOptions() {
     synchronize: false,
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
-    username: process.env.DB_USER,
+    username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
   } as ConnectionOptions;
