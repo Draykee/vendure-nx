@@ -9,7 +9,9 @@
     "dev": "nx run-many --target=serve --projects=server,worker",
     "dev:server": "nx run server:serve",
     "dev:worker": "nx run worker:serve",
-    "build": "nx run-many --target=build --projects=server,admin-ui,worker"
+    "build": "nx run-many --target=build --projects=server,admin-ui,worker",
+    "build:admin-ui": "nx run admin-ui:build",
+    "populate": "ts-node --project tools/scripts/tsconfig.json -r tsconfig-paths/register tools/scripts/populate.ts"
   },
   "private": true,
   "devDependencies": {
