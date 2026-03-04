@@ -23,9 +23,11 @@ services:
       - '9001:9001'
     volumes:
       - asset_s3_data:/data
+    env_file:
+      - .env
     environment:
-      - MINIO_ROOT_USER
-      - MINIO_ROOT_PASSWORD
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-test_user}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-test_password}
       - MINIO_REGION_NAME=${MINIO_STORAGE_REGION:-us-east-1}
       - MINIO_DEFAULT_BUCKETS=${MINIO_BUCKET:-vendure-assets}
     healthcheck:
