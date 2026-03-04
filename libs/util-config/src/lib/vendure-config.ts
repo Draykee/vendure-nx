@@ -71,9 +71,8 @@ export const config: VendureConfig = {
             },
             nativeS3Configuration: {
               endpoint: process.env.MINIO_ENDPOINT ?? 'http://localhost:9000',
-              s3ForcePathStyle: true,
-              signatureVersion: 'v4',
-              region: process.env.MINIO_STORAGE_REGION || undefined,
+              forcePathStyle: true,
+              region: process.env.MINIO_STORAGE_REGION || 'us-east-1',
             },
           })
         : undefined,
@@ -98,7 +97,7 @@ function getDbConnectionOptions() {
     synchronize: false,
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
-    username: process.env.DB_USER,
+    username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
   } as ConnectionOptions;
