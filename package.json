@@ -10,6 +10,7 @@
     "dev:server": "nx run server:serve",
     "dev:worker": "nx run worker:serve",
     "build": "nx run-many --target=build --projects=server,admin-ui,worker",
+    "build:admin-ui": "nx run admin-ui:build",
     "populate": "nx run server:populate"
   },
   "private": true,
