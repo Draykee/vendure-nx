@@ -2,6 +2,7 @@ import path from 'path';
 import {
   DefaultAssetNamingStrategy,
   DefaultLogger,
+  DefaultSearchPlugin,
   dummyPaymentHandler,
   LogLevel,
   TypeORMHealthCheckStrategy,
@@ -88,6 +89,7 @@ export const config: VendureConfig = {
         defaultJobOptions: {},
       },
     }),
+    DefaultSearchPlugin,
     ExamplePlugin,
   ],
 };
