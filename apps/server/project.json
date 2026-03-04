@@ -59,8 +59,6 @@
               "omit": [
                   "^@angular",
                   "zone.js",
-                  "^@vendure/admin-ui$",
-                  "@vendure/ui-devkit",
                   "ngx-color-picker",
                   "codejar",
                   "apollo-angular",

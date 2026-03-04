@@ -13,10 +13,12 @@ Vendure Nx Starter — an Nx integrated monorepo for a [Vendure](https://www.ven
 npm run dev              # Start server + worker together
 npm run dev:server       # Server only
 npm run dev:worker       # Worker only
+npm run dev:dashboard    # Dashboard Vite dev server
 
 # Build
-npm run build            # Build server, admin-ui, and worker
+npm run build            # Build server, admin-dashboard, and worker
 npx nx build server      # Build individual target
+npm run build:dashboard  # Build dashboard only
 
 # Test
 npm test                 # All tests (parallel=1)
@@ -43,7 +45,7 @@ nx g vendure-nx:vendure-plugin-generator --name=MyPlugin --uiExtension=true
 apps/
   server/          # Vendure HTTP server (admin-api + shop-api), runs migrations on start
   worker/          # Vendure job queue worker (BullMQ), health check on port 3123
-  admin-ui/        # Compiles customized Admin UI with plugin extensions
+  admin-dashboard/ # React-based Admin Dashboard (Vite + @vendure/dashboard)
 libs/
   util-config/     # Shared VendureConfig imported by both server and worker
   util-testing/    # E2E test utilities, fixtures, test config
@@ -60,16 +62,17 @@ tools/
 
 ### Server vs Worker
 
-The shared `VendureConfig` in `libs/util-config` is used by both server and worker. The `AdminUiPlugin` is added only in `apps/server/src/main.ts` via `mergeConfig` — it must NOT be in the shared config. Setting `RUN_JOB_QUEUE=1` starts the job queue inside the server process (for dev); in production the separate worker handles jobs.
+The shared `VendureConfig` in `libs/util-config` is used by both server and worker. The `DashboardPlugin` is added only in `apps/server/src/main.ts` via `mergeConfig` — it must NOT be in the shared config. Setting `RUN_JOB_QUEUE=1` starts the job queue inside the server process (for dev); in production the separate worker handles jobs.
 
 ### Plugin Structure
 
 Plugins live in `libs/plugin-<name>`. Each plugin has:
 - `lib/` — plugin class (`@VendurePlugin`), entities, resolvers, GraphQL schema extensions
-- `ui/` — Angular-based Admin UI extensions (components, routes, providers)
+- `ui/` — Legacy Angular-based Admin UI extensions (to be migrated to React dashboard extensions)
+- `dashboard/` — React-based dashboard extensions (new pattern)
 - `e2e/` — E2E tests using `@vendure/testing` with Vitest
 
-Register plugins in `libs/util-config/src/lib/vendure-config.ts` (plugins array) and `libs/util-config/src/lib/admin-ui-config.ts` (UI extensions).
+Register plugins in `libs/util-config/src/lib/vendure-config.ts` (plugins array). Dashboard extensions are auto-discovered by the `@vendure/dashboard` Vite plugin from the Vendure config.
 
 ### Generated Files — Do Not Edit
 
