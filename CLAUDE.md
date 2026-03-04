@@ -99,3 +99,12 @@ Environment: copy `.env.example` to `.env`. `dotenv` is loaded in `libs/util-con
 - Indent: 2 spaces
 - TypeScript: `experimentalDecorators` + `emitDecoratorMetadata` enabled
 - ESLint: `@nx/enforce-module-boundaries` enforced
+
+## Commit Linting
+
+Rules for commit message format (see [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary))
+
+Pattern: `<type>([optional scope]): <description>`\
+The description shall contain the ticket number if possible.
+
+Example message: `feat(product): My message with info about the commit (FS-0)`
