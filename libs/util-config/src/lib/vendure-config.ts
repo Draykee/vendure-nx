@@ -2,6 +2,7 @@ import path from 'path';
 import {
   DefaultAssetNamingStrategy,
   DefaultLogger,
+  DefaultSearchPlugin,
   dummyPaymentHandler,
   LogLevel,
   TypeORMHealthCheckStrategy,
@@ -62,7 +63,7 @@ export const config: VendureConfig = {
       assetUploadDir: path.join(rootDir, 'static/assets'),
       assetUrlPrefix,
       namingStrategy: new DefaultAssetNamingStrategy(),
-      storageStrategyFactory: process.env.USE_MINIO
+      storageStrategyFactory: process.env.USE_MINIO === 'true'
         ? configureS3AssetStorage({
             bucket: process.env.MINIO_BUCKET,
             credentials: {
@@ -81,12 +82,14 @@ export const config: VendureConfig = {
       connection: {
         host: process.env.REDIS_HOST ?? '127.0.0.1',
         port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
-        password: process.env.REDIS_PASSWORD ?? null,
+        password: process.env.REDIS_PASSWORD || undefined,
+        maxRetriesPerRequest: null,
       },
       queueOptions: {
         defaultJobOptions: {},
       },
     }),
+    DefaultSearchPlugin,
     ExamplePlugin,
   ],
 };

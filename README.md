@@ -36,10 +36,12 @@ This repo is set up to use Postgres as the DB, Redis to power the job queue, and
 2. `npm install`
 3. Copy `.env.example` to `.env`, and set the connection details for Postgres, Redis and (optionally) MinIO.
 4. Run `docker-compose up -d` to start all required services
-5. Populate the database with test data
-6. `npm dev:server`
+5. Populate the database with test data (`npm run db:populate`)
+6. Build the admin ui (`npm run build:admin-ui`) - skip this if you are using `@vendure/dashboard` instead
+7. Run `npm run dev` to start the server and worker in watch mode
 
-Why npm? I ran into an issue when using the latest version of npm, where the dependencies were not flattened in a way that broke the admin ui compilation. I _think_ this can be mitigated with the `--legacy-peer-deps` flag, if you prefer to use npm.
+Optional:
+- Run `npm run dev:server` to only start the server in watch mode or `npm run dev:worker` for the worker.
 
 ## Migrations
 
@@ -66,10 +68,28 @@ So it should be sufficient to configure your hosting platform to clone the repo,
 
 When you run the `build` command, we use a custom Nx executor named "package" which you can find in [/tools/executors/package](./tools/executors/package). This executor will create a new `package.json` file for the server/worker which _only_ contain the run-time dependencies that they need, rather than the entire contents of the root `package.json`.
 
-## Generating a new Vendure plugin
+## Additional tools and information
+
+### Generating a new Vendure plugin
+
 Execute the following command to generate a new Vendure plugin in the `libs` directory:
 
 ```bash
 nx g vendure-nx:vendure-plugin-generator --name=Example --uiExtension=true
 ```
-Read more about the `vendure-plugin-generator` in a dedicated readme file:  [tools/vendure-nx/README.md](tools/vendure-nx/README.md)
+
+Read more about the `vendure-plugin-generator` in a dedicated readme file: [tools/vendure-nx/README.md](tools/vendure-nx/README.md)
+
+### Graphql Typescript code generation
+
+Internally we use [graphql-code-generator](https://graphql-code-generator.com/) to generate TypeScript types based on the Vendure server's GraphQL APIs.
+It is used to automatically generate correct types for plugin resolvers and plugin e2e tests. This ensures that whenever a schema is changed or a CustomField added, new typings can be generated to make sure your resolvers and tests are correct.
+
+1. Run the server with `npm run dev:server`
+2. Execute a nx `codegen` target for the library you are currently working on
+
+```bash
+nx run <lib-name>:codegen
+```
+
+Depending on the `project.json` configuration, this will either generate the types for the e2e tests and the ui as well.
