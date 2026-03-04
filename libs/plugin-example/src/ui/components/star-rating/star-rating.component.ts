@@ -21,7 +21,7 @@ export class StarRatingComponent implements CustomFieldControl {
     formControl: FormControl;
 
     get starRating(): number {
-        return this.formControl ? this.formControl.value : this.rating;
+        return (this.formControl ? this.formControl.value : this.rating) ?? 0;
     }
 
     get stars(): StarType[] {
