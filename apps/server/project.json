@@ -32,6 +32,14 @@
               ]
           }
       },
+      "populate": {
+          "executor": "nx:run-commands",
+          "options": {
+              "commands": [
+                  "npx ts-node -r tsconfig-paths/register --project tools/scripts/tsconfig.json tools/scripts/populate.ts"
+              ]
+          }
+      },
       "transpile-migrations": {
           "executor": "nx:run-commands",
           "options": {

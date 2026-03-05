@@ -3,11 +3,12 @@ import { compileUiExtensions } from '@vendure/ui-devkit/compiler';
 import path from 'path';
 
 compileUiExtensions({
-    outputPath: path.join(__dirname, '../../../dist/apps/admin-ui-app'),
-    extensions: uiExtensionsConfig,
-    devMode: false,
+  outputPath: path.join(__dirname, '../../../dist/apps/admin-ui'),
+  extensions: uiExtensionsConfig,
+  devMode: false,
+  command: 'npm',
 })
-    .compile?.()
-    .then(() => {
-        process.exit(0);
-    });
+  .compile?.()
+  .then(() => {
+    process.exit(0);
+  });

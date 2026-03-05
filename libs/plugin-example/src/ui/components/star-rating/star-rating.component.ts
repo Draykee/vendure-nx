@@ -13,7 +13,7 @@ type StarType = 'empty' | 'full' | 'half';
     imports: [SharedModule],
 })
 export class StarRatingComponent implements CustomFieldControl {
-    @Input() rating: number | null;
+    @Input() rating: number = 0;
     @Input() showLabel = false;
 
     readonly: boolean;
@@ -21,7 +21,7 @@ export class StarRatingComponent implements CustomFieldControl {
     formControl: FormControl;
 
     get starRating(): number {
-        return this.formControl ? this.formControl.value : this.rating;
+        return (this.formControl ? this.formControl.value : this.rating) ?? 0;
     }
 
     get stars(): StarType[] {
