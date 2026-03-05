@@ -2,6 +2,7 @@ import path from 'path';
 import {
   DefaultAssetNamingStrategy,
   DefaultLogger,
+  DefaultSearchPlugin,
   dummyPaymentHandler,
   LogLevel,
   TypeORMHealthCheckStrategy,
@@ -14,6 +15,8 @@ import {
 } from '@vendure/asset-server-plugin';
 import { BullMQJobQueuePlugin } from '@vendure/job-queue-plugin/package/bullmq';
 import { ExamplePlugin } from '@vendure-nx/plugin-example';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const PORT = +((process.env.API_INTERNAL_PORT ?? 3000).toString());
 const assetUrlPrefix =
@@ -46,8 +49,8 @@ export const config: VendureConfig = {
       process.env.LOG_LEVEL === 'debug'
         ? LogLevel.Debug
         : process.env.LOG_LEVEL === 'verbose'
-        ? LogLevel.Verbose
-        : LogLevel.Info,
+          ? LogLevel.Verbose
+          : LogLevel.Info,
   }),
   systemOptions: {
     healthChecks: [
@@ -60,7 +63,7 @@ export const config: VendureConfig = {
       assetUploadDir: path.join(rootDir, 'static/assets'),
       assetUrlPrefix,
       namingStrategy: new DefaultAssetNamingStrategy(),
-      storageStrategyFactory: process.env.USE_MINIO
+      storageStrategyFactory: process.env.USE_MINIO === 'true'
         ? configureS3AssetStorage({
             bucket: process.env.MINIO_BUCKET,
             credentials: {
@@ -69,9 +72,8 @@ export const config: VendureConfig = {
             },
             nativeS3Configuration: {
               endpoint: process.env.MINIO_ENDPOINT ?? 'http://localhost:9000',
-              s3ForcePathStyle: true,
-              signatureVersion: 'v4',
-              region: process.env.MINIO_STORAGE_REGION || undefined,
+              forcePathStyle: true,
+              region: process.env.MINIO_STORAGE_REGION || 'us-east-1',
             },
           })
         : undefined,
@@ -79,13 +81,15 @@ export const config: VendureConfig = {
     BullMQJobQueuePlugin.init({
       connection: {
         host: process.env.REDIS_HOST ?? '127.0.0.1',
-        port: +process.env.REDIS_PORT ?? 6379,
-        password: process.env.REDIS_PASSWORD ?? null,
+        port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
+        password: process.env.REDIS_PASSWORD || undefined,
+        maxRetriesPerRequest: null,
       },
       queueOptions: {
         defaultJobOptions: {},
       },
     }),
+    DefaultSearchPlugin,
     ExamplePlugin,
   ],
 };
@@ -96,7 +100,7 @@ function getDbConnectionOptions() {
     synchronize: false,
     host: process.env.DB_HOST,
     port: +process.env.DB_PORT,
-    username: process.env.DB_USER,
+    username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
   } as ConnectionOptions;
